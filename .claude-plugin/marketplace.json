@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "haddock",
-      "source": ".",
+      "source": "./",
       "description": "Session-scoped implementation plans for agentic projects",
       "version": "0.1.0",
       "author": { "name": "krisravishankar" },
