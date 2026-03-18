@@ -148,7 +148,6 @@
         "created_at": { "type": "string", "format": "date-time" },
         "prd_path": { "type": "string" },
         "repo_root": { "type": "string" },
-        "jira_epic": { "type": ["string", "null"] },
         "description": { "type": "string" },
         "tags": {
           "type": "array",

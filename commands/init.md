@@ -8,7 +8,7 @@ Initialize a Haddock project in the current repository.
 
 ## Arguments
 
-`$ARGUMENTS` — Project name (required). If it looks like a Jira epic key (e.g., `PROJ-123`), this is a Jira import (Phase 2 — see below).
+`$ARGUMENTS` — Project name (required).
 
 ## Instructions
 
@@ -47,7 +47,6 @@ Ask the developer which situation applies:
 
 1. **Greenfield** — Starting a new project from scratch
 2. **Mid-flight migration** — Project is already in progress, need to import existing state
-3. **Jira import** — If `$ARGUMENTS` matches a Jira epic key pattern (`[A-Z]+-\d+`)
 
 ### Step 3: Execute the Chosen Path
 
@@ -91,16 +90,6 @@ Reference `resources/example-config.json` in the plugin directory for the config
    - Future work gets `not_started` or `ready` based on dependencies
 5. Show the developer the parsed plan for confirmation before writing
 6. Write all files and suggest reviewing with `/haddock:status`
-
-#### Path 3: Jira Import
-
-This feature is planned for **Phase 2**. Inform the developer:
-
-> Jira integration is coming in Phase 2 of Haddock. For now, you can:
-> 1. Use `/haddock:init <project-name>` for a greenfield setup
-> 2. Export your Jira epic to a document and use the mid-flight migration path
->
-> Phase 2 will support direct Jira sync via `/haddock:sync`.
 
 ### Step 4: Verify
 

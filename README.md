@@ -46,7 +46,7 @@ A living plan manager for **Claude Code** and **GitHub Copilot CLI**. Breaks PRD
 | `/haddock:replan <reason>` | Revise the plan — adds/removes/reorders sessions while preserving merged work |
 | `/haddock:switch [project]` | Switch active project in a multi-project setup |
 | `/haddock:log [filters]` | Session history with optional `--from`/`--to` date filters |
-| `/haddock:sync` | Jira sync (Phase 2 — not yet implemented) |
+| `/haddock:sync` | External sync (Phase 2 — not yet implemented) |
 
 ## How It Works
 
