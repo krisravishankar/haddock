@@ -1,3 +1,7 @@
+---
+description: Initialize a new Haddock project in the current repository
+---
+
 # /haddock:init
 
 Initialize a Haddock project in the current repository.

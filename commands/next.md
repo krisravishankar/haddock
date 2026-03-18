@@ -1,3 +1,7 @@
+---
+description: Select the next session to work on and begin planning it
+---
+
 # /haddock:next
 
 Select the next session to work on and begin planning it.

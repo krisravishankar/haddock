@@ -1,3 +1,7 @@
+---
+description: Revise the implementation plan based on new information or scope changes
+---
+
 # /haddock:replan
 
 Revise the implementation plan based on new information, scope changes, or session outcomes.

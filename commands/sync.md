@@ -1,3 +1,7 @@
+---
+description: Synchronize plan state with external tools (Phase 2)
+---
+
 # /haddock:sync
 
 Synchronize Haddock plan state with external project management tools.

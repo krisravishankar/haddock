@@ -1,3 +1,7 @@
+---
+description: Create an implementation plan from a PRD for the active project
+---
+
 # /haddock:plan
 
 Create or regenerate the implementation plan for the active Haddock project.

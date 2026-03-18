@@ -1,3 +1,8 @@
+---
+name: haddock-workflow
+description: Core workflow knowledge for Haddock — session lifecycle, NDJSON format, data model, and command relationships
+---
+
 # Haddock Workflow Skill
 
 You are working with **Haddock**, a living plan manager that tracks implementation progress through session-scoped plans stored as NDJSON.

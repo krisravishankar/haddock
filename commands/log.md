@@ -1,3 +1,7 @@
+---
+description: Display the session history log with optional filters
+---
+
 # /haddock:log
 
 Display the session history log for the active project.

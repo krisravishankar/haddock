@@ -1,3 +1,7 @@
+---
+description: Record the outcome of the current session and update the plan
+---
+
 # /haddock:done
 
 Record the outcome of the current session and update the plan.

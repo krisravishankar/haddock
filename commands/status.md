@@ -1,3 +1,7 @@
+---
+description: Display current plan progress, optionally as a report or portfolio view
+---
+
 # /haddock:status
 
 Display the current status of the Haddock plan.

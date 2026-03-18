@@ -1,12 +1,14 @@
 {
-  "hooks": [
-    {
-      "event": "Stop",
-      "description": "Remind to run /haddock:done if a session is in progress",
-      "handler": {
-        "type": "command",
-        "command": "bash hooks/session-end-reminder.sh"
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/session-end-reminder.sh"
+          }
+        ]
       }
-    }
-  ]
+    ]
+  }
 }
