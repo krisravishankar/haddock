@@ -75,6 +75,7 @@ Not every command needs all data. Load only what's needed:
 | `done` | plan.ndjson, sessions.ndjson (to append) |
 | `status` | plan.ndjson, sessions.ndjson (for `--report`) |
 | `log` | sessions.ndjson |
+| `purge` | plan.ndjson (for summary stats before deletion) |
 | `sync` | N/A (Phase 2) |
 
 ## Command Workflow
@@ -90,6 +91,7 @@ The typical workflow is:
 7. `/haddock:replan` — adjust the plan if scope changes
 8. `/haddock:status` — check progress at any time
 9. `/haddock:log` — review session history
+10. `/haddock:purge` — remove a project or all projects when no longer needed
 
 ## Validation
 
