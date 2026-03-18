@@ -1,24 +1,23 @@
 {
   "name": "haddock",
-  "version": "0.1.0",
-  "description": "Living plan manager — session-scoped implementation plans for agentic projects",
-  "author": "krisravishankar",
-  "repository": "https://github.com/krisravishankar/haddock",
-  "license": "MIT",
-  "platforms": ["claude-code", "copilot-cli"],
-  "keywords": ["planning", "sessions", "ndjson", "project-management", "workflow"],
-  "install": {
-    "claude-code": "claude plugin install --git https://github.com/krisravishankar/haddock",
-    "copilot-cli": "/plugin install https://github.com/krisravishankar/haddock"
+  "owner": {
+    "name": "krisravishankar"
   },
-  "commands": [
-    {"name": "haddock:init", "description": "Initialize a new project with .haddock/ structure"},
-    {"name": "haddock:plan", "description": "Generate a session-based implementation plan from a PRD"},
-    {"name": "haddock:replan", "description": "Revise the plan based on new context or discoveries"},
-    {"name": "haddock:next", "description": "Pick the next session to work on from the dependency graph"},
-    {"name": "haddock:done", "description": "Record session outcomes and update plan status"},
-    {"name": "haddock:status", "description": "View progress across sessions and stories"},
-    {"name": "haddock:log", "description": "Browse session history with filters"},
-    {"name": "haddock:sync", "description": "Jira sync (Phase 2)"}
+  "metadata": {
+    "description": "Living plan manager — session-scoped implementation plans for agentic projects",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "haddock",
+      "source": ".",
+      "description": "Session-scoped implementation plans for agentic projects",
+      "version": "0.1.0",
+      "author": { "name": "krisravishankar" },
+      "repository": "https://github.com/krisravishankar/haddock",
+      "license": "MIT",
+      "keywords": ["planning", "sessions", "ndjson", "project-management", "workflow"],
+      "category": "development"
+    }
   ]
 }
