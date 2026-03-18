@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "Bash(sudo apt-get:*)",
+      "Bash(unzip:*)",
+      "WebSearch",
+      "WebFetch(domain:docs.github.com)",
+      "WebFetch(domain:www.kenmuse.com)",
+      "Bash(chmod +x:*)",
+      "Bash(git:*)"
+    ]
+  }
+}

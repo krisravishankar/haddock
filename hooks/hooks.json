@@ -1,0 +1,9 @@
+{
+  "hooks": [
+    {
+      "event": "Stop",
+      "command": "bash hooks/session-end-reminder.sh",
+      "description": "Remind to run /haddock:done if a session is in progress"
+    }
+  ]
+}

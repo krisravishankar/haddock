@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "haddock-schema",
+  "title": "Haddock Plan Manager Schema",
+  "description": "Schema definitions for all Haddock data types",
+  "$defs": {
+    "sessionStatus": {
+      "type": "string",
+      "enum": ["not_started", "blocked", "ready", "planning", "in_progress", "in_review", "merged"]
+    },
+    "complexity": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    },
+    "story": {
+      "type": "object",
+      "required": ["id", "title", "acceptance_criteria", "status"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^S\\d{3}-\\d{2}$" },
+        "title": { "type": "string" },
+        "acceptance_criteria": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "status": { "$ref": "#/$defs/sessionStatus" }
+      },
+      "additionalProperties": false
+    },
+    "planSession": {
+      "type": "object",
+      "required": ["id", "title", "goal", "status", "stories", "files", "dependencies", "complexity", "created_at", "updated_at"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^S\\d{3}$" },
+        "title": { "type": "string" },
+        "goal": { "type": "string" },
+        "status": { "$ref": "#/$defs/sessionStatus" },
+        "stories": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/story" }
+        },
+        "files": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^S\\d{3}$" }
+        },
+        "preconditions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "complexity": { "$ref": "#/$defs/complexity" },
+        "notes": { "type": "string", "default": "" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "deferral": {
+      "type": "object",
+      "required": ["description", "reason"],
+      "properties": {
+        "description": { "type": "string" },
+        "reason": { "type": "string" },
+        "suggested_session": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "discovery": {
+      "type": "object",
+      "required": ["description", "impact"],
+      "properties": {
+        "description": { "type": "string" },
+        "impact": { "type": "string" },
+        "affects_sessions": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^S\\d{3}$" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "debt": {
+      "type": "object",
+      "required": ["description", "severity"],
+      "properties": {
+        "description": { "type": "string" },
+        "severity": { "$ref": "#/$defs/complexity" },
+        "ticket": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "blocker": {
+      "type": "object",
+      "required": ["description"],
+      "properties": {
+        "description": { "type": "string" },
+        "blocks_sessions": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^S\\d{3}$" }
+        },
+        "external": { "type": "boolean", "default": false }
+      },
+      "additionalProperties": false
+    },
+    "sessionOutcome": {
+      "type": "object",
+      "required": ["session_id", "completed_at", "summary"],
+      "properties": {
+        "session_id": { "type": "string", "pattern": "^S\\d{3}$" },
+        "completed_at": { "type": "string", "format": "date-time" },
+        "branch": { "type": "string" },
+        "mr_link": { "type": "string" },
+        "duration_minutes": { "type": "integer", "minimum": 0 },
+        "summary": { "type": "string" },
+        "stories_completed": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "stories_partial": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "deferrals": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/deferral" }
+        },
+        "discoveries": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/discovery" }
+        },
+        "debt": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/debt" }
+        },
+        "blockers": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/blocker" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "projectConfig": {
+      "type": "object",
+      "required": ["name", "created_at"],
+      "properties": {
+        "name": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "prd_path": { "type": "string" },
+        "repo_root": { "type": "string" },
+        "jira_epic": { "type": ["string", "null"] },
+        "description": { "type": "string" },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "settings": { "type": "object" }
+      },
+      "additionalProperties": false
+    }
+  }
+}
