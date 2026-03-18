@@ -1,6 +1,8 @@
 {
   "name": "haddock",
   "description": "Living plan manager — session-scoped implementation plans for agentic projects",
-  "author": "Krishna",
+  "author": {
+    "name": "krisravishankar"
+  },
   "version": "0.1.0"
 }
