@@ -57,8 +57,15 @@ If `$ARGUMENTS` contains a session ID:
 - If not `ready`, explain why (blocked by which sessions, or already in progress)
 
 If no argument:
-- If only one session is `ready`, suggest it
-- If multiple are `ready`, ask the developer to choose
+- If only one session is `ready`, suggest it and ask the developer to confirm
+- If multiple are `ready`, present a numbered list for the developer to choose from:
+  ```
+  Which session would you like to start?
+  1. [S003] Authentication (high complexity, 2 stories)
+  2. [S005] Frontend scaffolding (medium complexity, 3 stories)
+  3. [S007] Dashboard layout (low complexity, 1 story)
+  ```
+  Wait for the developer to respond with a number, then select that session.
 - If none are `ready`, explain what's blocking progress
 
 ### Step 4: Begin Session Planning
@@ -94,15 +101,31 @@ Once a session is selected:
 4. Enter plan mode to create a detailed implementation plan:
    - On Claude Code: use native plan mode
    - On Copilot CLI: use Shift+Tab plan mode
-   - The plan should cover the implementation approach for each story
+   - The plan should cover:
+     - Implementation approach for each story
+     - File creation/modification order
+     - Key design decisions and trade-offs
+     - Potential risks or unknowns
 
-5. Update the session status to `planning` in plan.ndjson:
+5. Present the plan to the developer for review:
+   ```
+   ## Implementation Plan
+
+   [The detailed plan content]
+
+   ---
+   Does this plan look good? Reply **yes** to proceed, or describe what you'd like to change.
+   ```
+
+6. If the developer requests changes, revise the plan and re-present it. Repeat until approved.
+
+7. Once approved, update the session status to `planning` in plan.ndjson:
    - Rewrite plan.ndjson with the session's status changed to `planning`
    - Update the `updated_at` timestamp
 
 ### Step 5: Confirm
 
 Tell the developer:
-- The session is now in `planning` status
+- The approved plan is ready for implementation
 - They should begin implementation
 - When done, run `/haddock:done` to record the outcome
