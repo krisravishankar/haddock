@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo.svg" alt="Haddock logo — a captain's cap" width="120"/>
+</p>
+
 # Haddock
 
 A living plan manager for **Claude Code** and **GitHub Copilot CLI**. Breaks PRDs into focused coding sessions, tracks dependencies between them, and records outcomes as you work. No custom code — just markdown skills, slash commands, and an agent that does the thinking.
