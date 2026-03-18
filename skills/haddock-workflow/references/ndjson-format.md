@@ -84,7 +84,7 @@ Single JSON object (not NDJSON). Standard pretty-printed JSON.
 | `name` | string | yes | Project name (matches directory name) |
 | `created_at` | datetime | yes | ISO 8601 creation timestamp |
 | `prd_path` | string | no | Path to the PRD document |
-| `repo_root` | string | no | Path to repository root |
+| `repo_root` | string | no | Path to the directory containing `.haddock/` (may differ from cwd if using a `.haddock_root` pointer) |
 | `jira_epic` | string/null | no | Jira epic key (Phase 2) |
 | `description` | string | no | Project description |
 | `tags` | string[] | no | Tags for categorization |

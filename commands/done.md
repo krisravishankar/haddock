@@ -12,7 +12,9 @@ Record the outcome of the current session and update the plan.
 
 ## Instructions
 
-First, read the Haddock workflow skill from `skills/haddock-workflow/SKILL.md` in the plugin directory.
+First, resolve the haddock root: if `.haddock_root` exists in the current directory, read it to get the path to `.haddock/`. Otherwise, use `.haddock/` in the current directory. Use this resolved path for all `.haddock/` references below.
+
+Read the Haddock workflow skill from `skills/haddock-workflow/SKILL.md` in the plugin directory.
 
 ### Step 1: Identify the Session
 
@@ -28,9 +30,9 @@ First, read the Haddock workflow skill from `skills/haddock-workflow/SKILL.md` i
 
 Gather information automatically:
 
-1. **Branch name**: Run `git branch --show-current` to get the current branch
+1. **Branch name**: Check if inside a git repo (`git rev-parse --git-dir 2>/dev/null`). If yes, run `git branch --show-current` to get the current branch. If not in a git repo, skip — the `branch` field is optional.
 2. **Duration**: If the session's `updated_at` shows when planning started, calculate approximate duration. Otherwise ask.
-3. **Git changes**: Run `git log --oneline` on the current branch to understand what was done
+3. **Git changes**: If inside a git repo, run `git log --oneline` on the current branch to understand what was done. If not in a git repo, ask the developer for a summary of what changed instead.
 
 ### Step 3: Interactive Outcome Collection
 

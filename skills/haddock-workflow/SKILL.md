@@ -13,7 +13,7 @@ A **session** is the unit of work — a focused coding session (60-120 minutes) 
 
 ## Directory Structure
 
-All state lives in `.haddock/` at the repo root:
+All state lives in `.haddock/` in the project working directory (or a designated git repo):
 
 ```
 .haddock/
@@ -26,6 +26,16 @@ All state lives in `.haddock/` at the repo root:
 ```
 
 Multiple projects can coexist. The `active` file contains the name of the current project.
+
+### Storage Resolution
+
+When the working directory is not itself a git repo, `.haddock/` may be stored in a child git repo for shareability. Commands find `.haddock/` as follows:
+
+1. Check for a `.haddock_root` file in the current working directory
+2. If found, read the path inside it — that directory contains `.haddock/`
+3. If not found, use `.haddock/` in the current directory (backwards compatible)
+
+The `.haddock_root` pointer file is created by `/haddock:init` when the user chooses to store `.haddock/` in a child git repo.
 
 ## NDJSON Rules
 

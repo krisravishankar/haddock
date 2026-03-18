@@ -12,7 +12,9 @@ Revise the implementation plan based on new information, scope changes, or sessi
 
 ## Instructions
 
-First, read the Haddock workflow skill from `skills/haddock-workflow/SKILL.md` in the plugin directory.
+First, resolve the haddock root: if `.haddock_root` exists in the current directory, read it to get the path to `.haddock/`. Otherwise, use `.haddock/` in the current directory. Use this resolved path for all `.haddock/` references below.
+
+Read the Haddock workflow skill from `skills/haddock-workflow/SKILL.md` in the plugin directory.
 
 ### Step 1: Load Full Context
 

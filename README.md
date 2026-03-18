@@ -60,7 +60,7 @@ claude plugin install /path/to/haddock
 
 ## Storage
 
-All state lives in `.haddock/` at the repo root:
+All state lives in `.haddock/` in your working directory:
 
 ```
 .haddock/
@@ -72,6 +72,8 @@ All state lives in `.haddock/` at the repo root:
 ```
 
 Files are NDJSON (one JSON object per line) for easy parsing and diffing.
+
+If your working directory isn't a git repo, `/haddock:init` will help you choose a git-tracked location for shareable state. A `.haddock_root` pointer file in the working directory tells commands where to find `.haddock/`.
 
 ## License
 
