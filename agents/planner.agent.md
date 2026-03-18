@@ -38,8 +38,10 @@ You must:
 Create a plan of sessions following these principles:
 
 **Session scoping:**
-- Each session should be 60-120 minutes of focused work
-- A session should produce a mergeable unit (feature branch → PR)
+- Each session should be a discrete, well-scoped unit of work that an agent can complete in a single conversation
+- Sessions should have clear boundaries and a well-defined goal, completable end-to-end without mid-session human intervention
+- Sessions should be as small as practical, but group related changes when splitting them would create unnecessary overhead or coordination cost
+- Sessions don't assume a specific output form — some produce PRs, others produce designs, research findings, or config changes
 - Prefer vertical slices (end-to-end for one feature) over horizontal layers
 - Foundation/infrastructure sessions come first
 

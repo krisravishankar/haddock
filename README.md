@@ -1,6 +1,6 @@
 # Haddock
 
-A living plan manager for **Claude Code** and **GitHub Copilot CLI**. Breaks PRDs into focused coding sessions (60–120 min each), tracks dependencies between them, and records outcomes as you work. No custom code — just markdown skills, slash commands, and an agent that does the thinking.
+A living plan manager for **Claude Code** and **GitHub Copilot CLI**. Breaks PRDs into focused coding sessions, tracks dependencies between them, and records outcomes as you work. No custom code — just markdown skills, slash commands, and an agent that does the thinking.
 
 ## Installation
 

@@ -9,7 +9,7 @@ You are working with **Haddock**, a living plan manager that tracks implementati
 
 ## Philosophy
 
-A **session** is the unit of work — a focused coding session (60-120 minutes) with clear scope, defined stories, and tracked outcomes. Sessions form a dependency graph that represents the implementation plan.
+A **session** is a discrete, well-scoped unit of work that an agent can complete in a single conversation. Sessions have clear boundaries and a well-defined goal, are completable end-to-end without mid-session human intervention, and are as small as practical — but group related changes when splitting them would create unnecessary overhead. Sessions don't assume a specific output form: some produce PRs, others produce designs, research findings, or config changes. Sessions form a dependency graph that represents the implementation plan.
 
 ## Directory Structure
 

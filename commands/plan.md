@@ -89,7 +89,7 @@ Iterate until the developer confirms the plan.
 
 ## Important
 
-- Each session should be scoped to 60-120 minutes of focused work
+- Each session should be a discrete, well-scoped unit of work completable by an agent in a single conversation
 - Sessions should have clear, testable acceptance criteria
 - The dependency graph should be a DAG (no circular dependencies)
 - File lists should be specific — list actual file paths, not directories
