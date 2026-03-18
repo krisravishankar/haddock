@@ -83,3 +83,12 @@ Return a structured analysis with:
 - Consider testing in every session — don't create separate "write tests" sessions
 - Account for config, environment setup, and documentation where needed
 - If the PRD is ambiguous, note assumptions in session notes
+
+## Replan Mode
+
+When invoked for a replan (you receive an existing plan plus a change request), follow these additional principles:
+
+- **Treat the entire non-merged plan as malleable** — new sessions may need to be inserted before existing ones, not just appended to the end
+- **Output sessions in dependency-topological order** — the logical build order, where depended-upon sessions always come before their dependents
+- **Preserve merged sessions exactly** — never modify completed work
+- **Flag changes affecting `in_progress` sessions** — warn the developer if the replan would alter active work

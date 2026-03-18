@@ -84,6 +84,7 @@ Present changes as a clear diff:
    - Preserve completed sessions (`merged`) exactly as they are
    - Preserve `in_progress`/`in_review`/`planning` sessions (only modify if explicitly part of the change)
    - Apply additions, removals, and modifications
+   - Reorder all non-merged sessions into dependency-topological order (depended-upon sessions come first). Among sessions at the same DAG depth, place foundation/infrastructure sessions first. Renumber IDs sequentially after the last merged session ID. Update all dependency references and story IDs to reflect the new numbering.
    - Recalculate all dependency-based statuses
    - Update `updated_at` timestamps on all modified sessions
 3. Verify the written file — each line must be valid JSON
@@ -105,5 +106,5 @@ Run /haddock:status to see the updated plan.
 
 - Never modify sessions with status `merged` — they represent completed work
 - Be cautious modifying `in_progress` sessions — warn the developer if changes affect active work
-- Session IDs for new sessions should continue the existing sequence (if last ID is S006, new ones start at S007)
+- After applying all changes, renumber ALL non-merged sessions in dependency-topological order, starting from the first non-merged ID. Update all internal references (dependencies, story IDs) to match.
 - Maintain the append-only nature of sessions.ndjson — only plan.ndjson is rewritten
