@@ -6,6 +6,8 @@ description: Create an implementation plan from a PRD for the active project
 
 Create or regenerate the implementation plan for the active Haddock project.
 
+Haddock is a **plan manager**, not a planner — it structures, validates, and tracks plans through the session lifecycle. The developer (with Claude's help) does the actual planning. This command guides that process and manages the result.
+
 ## Arguments
 
 `$ARGUMENTS` — Optional path to a PRD document. If not provided, the PRD path from config.json is used, or the developer is asked.
@@ -31,20 +33,63 @@ Read the Haddock workflow skill from `skills/haddock-workflow/SKILL.md` in the p
 4. Read the PRD document thoroughly — understand all requirements, features, and scope
 5. Update `config.json` with the PRD path if it was newly provided
 
-### Step 3: Codebase Analysis
+### Step 3: Check for Existing Session Plan
 
-Launch the **planner agent** (`agents/planner.agent.md` in the plugin directory) to analyze the codebase. The agent will:
+Check whether the current conversation already contains a session plan from a prior planning pass (e.g., the developer planned in native plan mode before running this command).
 
-1. Explore the repository structure to understand the architecture
-2. Identify existing patterns, frameworks, and conventions
-3. Map out the dependency graph of existing code
-4. Identify natural session boundaries based on the PRD requirements
+**If a session plan is already present in the conversation:**
 
-Wait for the agent's analysis before proceeding.
+1. Present the existing plan back to the developer in table form (see Step 5 format)
+2. Ask: "I found a session plan from earlier in this conversation. Would you like to use it, or start fresh?"
+3. If the developer wants to use it, skip to Step 5 (Interactive Refinement)
+4. If the developer wants to start fresh, continue to Step 4
 
-### Step 4: Interactive Session Design
+**If no session plan exists in the conversation**, continue to Step 4.
 
-Present the proposed session breakdown to the developer as a table:
+### Step 4: Plan the Sessions
+
+Enter plan mode to analyze the codebase and design sessions:
+- On Claude Code: use native plan mode
+- On Copilot CLI: use Shift+Tab plan mode
+
+#### 4.1: Codebase Exploration
+
+Use Glob and Read to understand the project:
+- Map the top-level directory structure
+- Identify the tech stack from config files (package.json, Cargo.toml, go.mod, pyproject.toml, etc.)
+- Find entry points, routing, database models, API definitions
+- Identify architectural patterns and conventions
+
+Present a brief codebase summary to the developer. **Pause and confirm understanding before proceeding** — the developer may want to steer the analysis ("focus on the auth module", "skip the legacy code", "this area is being rewritten").
+
+#### 4.2: PRD-to-Code Mapping
+
+For each major feature/requirement in the PRD:
+- Identify which existing files it touches
+- Identify what new files/modules need to be created
+- Note shared dependencies between features
+
+#### 4.3: Session Design
+
+Design sessions following the principles in the Haddock workflow skill. Key points:
+- Each session is completable by an agent in a single conversation
+- Prefer vertical slices over horizontal layers
+- Foundation/infrastructure first
+- Sessions form a DAG with minimal dependency chains
+- Each session has 1-5 stories with testable acceptance criteria
+- File lists are specific paths, not directories
+
+#### 4.4: Present Analysis
+
+Present the full analysis:
+1. Codebase summary (tech stack, architecture, conventions)
+2. Session list with IDs, titles, goals, stories, files, dependencies, complexity
+3. Dependency graph visualization
+4. Risks and areas of uncertainty
+
+### Step 5: Interactive Refinement
+
+Present the session breakdown to the developer as a table:
 
 ```
 | ID   | Title                    | Complexity | Dependencies | Stories |
@@ -68,7 +113,7 @@ Ask the developer:
 
 Iterate until the developer confirms the plan.
 
-### Step 5: Write plan.ndjson
+### Step 6: Write plan.ndjson
 
 1. Read `resources/schema.json` and `resources/example-plan.ndjson` from the plugin directory for format reference
 2. Write one JSON line per session to `.haddock/projects/<name>/plan.ndjson`
@@ -78,7 +123,7 @@ Iterate until the developer confirms the plan.
 4. Set `created_at` and `updated_at` to the current timestamp
 5. Ensure each line is valid JSON (no pretty-printing, no trailing commas)
 
-### Step 6: Confirm
+### Step 7: Confirm
 
 1. Read back the written file and verify each line parses as valid JSON
 2. Show a final summary:

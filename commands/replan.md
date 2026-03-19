@@ -40,17 +40,37 @@ Understand what `$ARGUMENTS` is asking for:
 
 If `$ARGUMENTS` is empty, look at pending deferrals and discoveries from sessions.ndjson and ask the developer if those should be incorporated.
 
-### Step 3: Launch Planner Agent
+### Step 3: Check for Existing Replan in Conversation
 
-Launch the **planner agent** (`agents/planner.agent.md` in the plugin directory) with:
-- The current plan state
-- The change request
-- All session outcomes (discoveries, deferrals, etc.)
-- The codebase context
+Check whether the current conversation already contains proposed plan changes from a prior planning pass (e.g., the developer worked through the replan in native plan mode before running this command).
 
-The agent will propose modifications to the plan.
+**If proposed changes are already present in the conversation:**
 
-### Step 4: Show the Diff
+1. Present the proposed changes back to the developer in diff form (see Step 5 format)
+2. Ask: "I found plan changes from earlier in this conversation. Would you like to apply them, or work through the replan fresh?"
+3. If the developer wants to apply them, skip to Step 5 (Show the Diff) with those changes
+4. If the developer wants to start fresh, continue to Step 4
+
+**If no proposed changes exist in the conversation**, continue to Step 4.
+
+### Step 4: Design the Changes
+
+Enter plan mode to work through the replan:
+- On Claude Code: use native plan mode
+- On Copilot CLI: use Shift+Tab plan mode
+
+Analyze the change request against the current plan and codebase:
+
+1. Identify which existing sessions are affected by the change
+2. Explore relevant parts of the codebase if needed (e.g., new features require understanding where they'd fit)
+3. Propose modifications: new sessions, modified sessions, removed sessions, resequencing
+4. Follow the replan principles:
+   - Treat the entire non-merged plan as malleable — new sessions may need to be inserted before existing ones
+   - Output sessions in dependency-topological order
+   - Preserve merged sessions exactly
+   - Flag changes affecting `in_progress` sessions — warn the developer
+
+### Step 5: Show the Diff
 
 Present changes as a clear diff:
 
@@ -79,7 +99,7 @@ Present changes as a clear diff:
 | S005 | ready         | blocked       | Now depends on S007       |
 ```
 
-### Step 5: Confirm and Write
+### Step 6: Confirm and Write
 
 1. Ask the developer to confirm the changes
 2. If confirmed, rewrite `.haddock/projects/<name>/plan.ndjson` entirely:
@@ -91,7 +111,7 @@ Present changes as a clear diff:
    - Update `updated_at` timestamps on all modified sessions
 3. Verify the written file — each line must be valid JSON
 
-### Step 6: Summary
+### Step 7: Summary
 
 ```
 ## Replan Complete

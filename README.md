@@ -4,7 +4,7 @@
 
 # Haddock
 
-A living plan manager for **Claude Code** and **GitHub Copilot CLI**. Breaks PRDs into focused coding sessions, tracks dependencies between them, and records outcomes as you work. No custom code — just markdown skills, slash commands, and an agent that does the thinking.
+A living plan manager for **Claude Code** and **GitHub Copilot CLI**. Breaks PRDs into focused coding sessions, tracks dependencies between them, and records outcomes as you work. No custom code — just markdown skills and slash commands.
 
 ## Installation
 
@@ -68,9 +68,9 @@ not_started → ready → planning → in_progress → in_review → merged
 - **Automatic transitions:** when a session merges, Haddock recalculates downstream readiness — blocked sessions become ready when their dependencies are met.
 - **Command-triggered:** `/haddock:next` moves a session to `planning`, `/haddock:done` records the outcome and advances the status.
 
-### The Planner Agent
+### Planning
 
-The built-in planner agent analyzes your codebase (tech stack, architecture, file structure) and your PRD to design sessions. It identifies file-level impacts, flags merge conflict risks, and builds a dependency graph. During replanning, it preserves merged sessions and reorders the rest.
+Haddock is a plan manager, not a planner — you (with Claude's help) do the planning. `/haddock:plan` guides you through codebase analysis and session design using native plan mode. If you prefer to plan in plan mode first (Shift+Tab), the command will detect your session plan from the conversation and offer to use it directly. Either way, Haddock validates, writes, and manages the result.
 
 ## Storage
 
