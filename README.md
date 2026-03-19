@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo.svg" alt="Haddock logo — a captain's cap" width="120"/>
+  <img src="logo.png" alt="Haddock logo — a captain's cap" width="120"/>
 </p>
 
 # Haddock
