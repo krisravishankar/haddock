@@ -4,7 +4,7 @@
 
 # Haddock
 
-A living plan manager for **Claude Code** and **GitHub Copilot CLI**. Breaks PRDs into focused coding sessions, tracks dependencies between them, and records outcomes as you work. No custom code — just markdown skills and slash commands.
+A living plan manager for **Claude Code** and **GitHub Copilot CLI**. Manages PRD-derived session plans — tracking dependencies, orchestrating the session lifecycle, and recording outcomes as you work. No custom code — just markdown skills and slash commands.
 
 ## Installation
 
@@ -43,7 +43,7 @@ A living plan manager for **Claude Code** and **GitHub Copilot CLI**. Breaks PRD
 | Command | Description |
 |---------|-------------|
 | `/haddock:init <name>` | Initialize a new project — detects git repo, sets up `.haddock/` storage |
-| `/haddock:plan [prd-path]` | Analyze codebase + PRD and generate a dependency-ordered session plan |
+| `/haddock:plan [prd-path]` | Guide session planning from a PRD and write the dependency-ordered plan |
 | `/haddock:next [session-id]` | Show ready sessions, pick one, and enter planning mode |
 | `/haddock:done [session-id]` | Record outcome — completed stories, deferrals, discoveries, blockers |
 | `/haddock:status [--report\|--all]` | Progress bar, story counts, risks. `--report` for stakeholder view, `--all` for portfolio |
