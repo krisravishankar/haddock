@@ -19,9 +19,10 @@ Read the Haddock workflow skill from `skills/haddock-workflow/SKILL.md` in the p
 ### Step 1: Identify the Session
 
 1. Read `.haddock/active` to get the active project name
-2. Read `.haddock/projects/<name>/plan.ndjson`
-3. If `$ARGUMENTS` contains a session ID, use that session
-4. Otherwise, find sessions with status `in_progress` or `planning`
+2. Read `.haddock/projects/<name>/plan.md`
+3. Parse all `## S<NNN> — <title>` sections and their `<!-- haddock: ... -->` metadata
+4. If `$ARGUMENTS` contains a session ID, use that session
+5. Otherwise, find sessions with `status=in_progress` or `status=planning`
    - If exactly one, use it
    - If multiple, ask the developer which one
    - If none, tell the developer no session is in progress
@@ -30,8 +31,8 @@ Read the Haddock workflow skill from `skills/haddock-workflow/SKILL.md` in the p
 
 Gather information automatically:
 
-1. **Branch name**: Check if inside a git repo (`git rev-parse --git-dir 2>/dev/null`). If yes, run `git branch --show-current` to get the current branch. If not in a git repo, skip — the `branch` field is optional.
-2. **Duration**: If the session's `updated_at` shows when planning started, calculate approximate duration. Otherwise ask.
+1. **Branch name**: Check if inside a git repo (`git rev-parse --git-dir 2>/dev/null`). If yes, run `git branch --show-current` to get the current branch. If not in a git repo, skip — branch is optional.
+2. **Duration**: If the session's `updated` timestamp shows when planning started, calculate approximate duration. Otherwise ask.
 3. **Git changes**: If inside a git repo, run `git log --oneline` on the current branch to understand what was done. If not in a git repo, ask the developer for a summary of what changed instead.
 
 ### Step 3: Interactive Outcome Collection
@@ -69,28 +70,51 @@ Ask the developer about each of these (skip any that aren't applicable):
 9. **Blockers**: "Any blockers encountered?"
    - For each: description, which sessions it blocks, is it external?
 
-### Step 4: Write Session Outcome
+### Step 4: Append Session Outcome to session.md
 
-1. Read `resources/schema.json` and `resources/example-sessions.ndjson` from the plugin directory for format reference
-2. Construct the session outcome JSON object
-3. Append one line to `.haddock/projects/<name>/sessions.ndjson`
-4. Do NOT modify existing lines in sessions.ndjson — append only
+1. Read `resources/example-session.md` from the plugin directory for format reference
+2. Construct the session entry in haddock markdown format:
 
-### Step 5: Update Plan
+   ```markdown
+   ## S003 — Authentication and authorization
+   **Completed**: 2026-03-10 11:45 UTC | **Duration**: 90 min | **Branch**: `feat/auth` | **PR**: [#3](https://github.com/org/repo/pull/3)
 
-1. Update the session's status in plan.ndjson to the determined status
-2. Update individual story statuses based on completed/partial lists
-3. Update the `updated_at` timestamp
+   Implemented JWT-based authentication with role-based access control. All stories completed.
+
+   **Stories completed**: S003-01, S003-02
+   **Stories partial**: (none)
+
+   **Discoveries**: (none)
+
+   **Deferrals**: (none)
+
+   **Tech Debt**: (none)
+
+   **Blockers**: (none)
+
+   ---
+   ```
+
+3. Append this entry to `.haddock/projects/<name>/session.md`
+4. Do NOT modify any existing entries in `session.md` — append only
+
+### Step 5: Update plan.md
+
+1. In the session's `<!-- haddock: ... -->` metadata comment, update `status` to the determined status and update `updated` to now
+2. Update individual story checkbox states in the `### Stories` section:
+   - Completed stories and their acceptance criteria: change `[ ]` to `[x]`
+   - Partial stories: check off only the completed acceptance criteria
+3. Write the updated `plan.md` — rewrite the entire file with these changes applied
 
 ### Step 6: Recalculate Dependencies
 
 If the session was marked `merged`:
 
-1. Find all sessions that depend on this session
-2. For each dependent, check if ALL its dependencies are now `merged`
-3. If yes, update that session from `not_started` or `blocked` → `ready`
-4. Update `updated_at` on all modified sessions
-5. Rewrite the entire plan.ndjson with updated statuses
+1. Find all sessions in `plan.md` that list this session in their `dependencies`
+2. For each dependent, check if ALL its dependencies now have `status=merged`
+3. If yes, update that session's metadata from `status=not_started` or `status=blocked` to `status=ready`
+4. Update the `updated` timestamp on all modified sessions
+5. Rewrite the entire `plan.md` with updated metadata comments
 
 ### Step 7: Summary
 

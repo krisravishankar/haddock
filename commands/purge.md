@@ -29,7 +29,7 @@ If `$ARGUMENTS` is `--all`:
 
 1. List all directories under `.haddock/projects/`
 2. If no projects exist, inform the developer there is nothing to purge and stop
-3. For each project, read its `plan.ndjson` and compute summary stats
+3. For each project, read its `plan.md` and count sessions by parsing `## S<NNN>` sections and their `<!-- haddock: status=... -->` metadata
 4. Display a portfolio summary table:
 
 ```
@@ -84,7 +84,7 @@ If `$ARGUMENTS` is a project name or empty:
 
 #### Step 2: Show What Will Be Deleted
 
-1. Read the project's `plan.ndjson` and parse all sessions
+1. Read the project's `plan.md` and parse all sessions
 2. Count sessions by status and total stories
 3. Display a summary of what will be deleted:
 
@@ -93,8 +93,8 @@ If `$ARGUMENTS` is a project name or empty:
 
 Contents:
 - config.json
-- plan.ndjson — 6 sessions (2 merged, 1 in progress, 3 not started)
-- sessions.ndjson — 2 recorded outcomes
+- plan.md — 6 sessions (2 merged, 1 in progress, 3 not started)
+- session.md — 2 recorded outcomes
 
 Total: 20 stories across 6 sessions
 ```

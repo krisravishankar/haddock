@@ -23,7 +23,7 @@ Read the Haddock workflow skill from `skills/haddock-workflow/SKILL.md` in the p
 1. Read `.haddock/active` to get the active project name
 2. If no active project, tell the developer to run `/haddock:init` first
 3. Read `.haddock/projects/<name>/config.json`
-4. Check if `plan.ndjson` already has content — if so, warn that this will overwrite it and confirm
+4. Check if `plan.md` already has sessions beyond the header — if so, warn that this will overwrite them and confirm
 
 ### Step 2: Find and Read the PRD
 
@@ -35,16 +35,16 @@ Read the Haddock workflow skill from `skills/haddock-workflow/SKILL.md` in the p
 
 ### Step 3: Check for Existing Session Plan
 
-Check whether the current conversation already contains a session plan from a prior planning pass (e.g., the developer planned in native plan mode before running this command).
+Check whether the current conversation already contains a session plan from a prior planning pass (e.g., the developer planned in native plan mode before running this command, or Copilot already generated a `plan.md`).
 
-**If a session plan is already present in the conversation:**
+**If a session plan is already present in the conversation or if a `plan.md` already exists with sessions:**
 
 1. Present the existing plan back to the developer in table form (see Step 5 format)
 2. Ask: "I found a session plan from earlier in this conversation. Would you like to use it, or start fresh?"
 3. If the developer wants to use it, skip to Step 5 (Interactive Refinement)
 4. If the developer wants to start fresh, continue to Step 4
 
-**If no session plan exists in the conversation**, continue to Step 4.
+**If no session plan exists**, continue to Step 4.
 
 ### Step 4: Plan the Sessions
 
@@ -113,19 +113,23 @@ Ask the developer:
 
 Iterate until the developer confirms the plan.
 
-### Step 6: Write plan.ndjson
+### Step 6: Write plan.md
 
-1. Read `resources/schema.json` and `resources/example-plan.ndjson` from the plugin directory for format reference
-2. Write one JSON line per session to `.haddock/projects/<name>/plan.ndjson`
-3. Assign initial statuses:
-   - Sessions with no dependencies → `ready`
-   - Sessions with dependencies → `not_started`
-4. Set `created_at` and `updated_at` to the current timestamp
-5. Ensure each line is valid JSON (no pretty-printing, no trailing commas)
+1. Read `resources/example-plan.md` from the plugin directory for format reference
+2. Write the full plan to `.haddock/projects/<name>/plan.md` in the haddock markdown format:
+   - Start with `# Plan: <project-name>`
+   - One `## S<NNN> — <title>` section per session
+   - Include `<!-- haddock: status=... complexity=... dependencies=... updated=... -->` metadata comment
+   - Assign initial statuses:
+     - Sessions with no dependencies → `status=ready`
+     - Sessions with unmerged dependencies → `status=not_started`
+   - Set `updated` to the current ISO 8601 timestamp
+   - Include goal, files, and stories with unchecked checkboxes
+   - Separate sessions with `---`
 
 ### Step 7: Confirm
 
-1. Read back the written file and verify each line parses as valid JSON
+1. Read back the written file to verify it looks correct
 2. Show a final summary:
    - Total sessions and story count
    - Sessions ready to start

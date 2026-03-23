@@ -20,16 +20,16 @@ Read the Haddock workflow skill from `skills/haddock-workflow/SKILL.md` in the p
 
 1. Read `.haddock/active` to get the active project name
 2. If no active project, tell the developer to run `/haddock:init` first
-3. Read `.haddock/projects/<name>/plan.ndjson`
-4. Parse each line as a JSON object into a list of sessions
+3. Read `.haddock/projects/<name>/plan.md`
+4. Parse each `## S<NNN> — <title>` section and its `<!-- haddock: ... -->` metadata comment into a list of sessions
 
 ### Step 2: Evaluate Readiness
 
 Recalculate session statuses based on the dependency graph:
 
-1. For each session, check if all its dependencies have status `merged`
-2. If a session has status `not_started` and all deps are `merged` (or no deps), update to `ready`
-3. If a session has status `not_started` and any dep is not `merged`, update to `blocked`
+1. For each session, check if all its dependencies have `status=merged`
+2. If a session has `status=not_started` and all deps are `merged` (or no deps), update to `ready`
+3. If a session has `status=not_started` and any dep is not `merged`, update to `blocked`
 
 Present sessions grouped by status:
 
@@ -74,8 +74,8 @@ If no argument:
 
 Once a session is selected:
 
-1. Read the session's stories, acceptance criteria, and file list from plan.ndjson
-2. Read any previous session outcomes from sessions.ndjson for context:
+1. Read the session's stories, acceptance criteria, and file list from `plan.md`
+2. Read any previous session outcomes from `session.md` for context:
    - Look for discoveries that affect this session
    - Check for deferrals that were suggested for this session
    - Note any relevant blockers from prior sessions
@@ -121,9 +121,10 @@ Once a session is selected:
 
 6. If the developer requests changes, revise the plan and re-present it. Repeat until approved.
 
-7. Once approved, update the session status to `planning` in plan.ndjson:
-   - Rewrite plan.ndjson with the session's status changed to `planning`
-   - Update the `updated_at` timestamp
+7. Once approved, update the session's metadata in `plan.md`:
+   - Change `status=ready` to `status=planning` in the `<!-- haddock: ... -->` comment
+   - Update the `updated` timestamp to now
+   - Rewrite only the metadata comment line for that session; leave all other content unchanged
 
 ### Step 5: Confirm
 

@@ -59,8 +59,8 @@ Ask the developer which situation applies:
    └── projects/
        └── <project-name>/
            ├── config.json
-           ├── plan.ndjson
-           └── sessions.ndjson
+           ├── plan.md
+           └── session.md
    ```
 2. Write the project name to `<haddock_root>/.haddock/active`
 3. Create `config.json` with:
@@ -69,27 +69,37 @@ Ask the developer which situation applies:
    - `prd_path`: ask the developer for the PRD location (or leave empty)
    - `description`: ask for a brief description
    - Other fields as defaults (null/empty)
-4. Create empty `plan.ndjson` and `sessions.ndjson` files
-5. Confirm creation and suggest running `/haddock:plan` next
+4. Create `plan.md` with a header only:
+   ```markdown
+   # Plan: <project-name>
+   ```
+5. Create `session.md` with a header only:
+   ```markdown
+   # Session Log: <project-name>
+   ```
+6. Confirm creation and suggest running `/haddock:plan` next
 
 Reference `resources/example-config.json` in the plugin directory for the config format.
 
 #### Path 2: Mid-flight Migration
 
 1. Ask the developer where existing plan information lives:
+   - An existing `plan.md` file (from Copilot plan mode or prior planning)?
    - A markdown file with task lists?
    - A previous plan document?
    - Just in their head?
 2. Read the provided source material
 3. Create the project directory structure (same as greenfield)
-4. Parse existing information into sessions:
-   - Each logical chunk of work becomes a session in plan.ndjson
-   - Already-completed work gets sessions with status `merged`
-   - For completed sessions, also create entries in sessions.ndjson with best-effort data
-   - In-progress work gets status `in_progress`
-   - Future work gets `not_started` or `ready` based on dependencies
+4. Parse existing information into sessions using the haddock markdown format:
+   - Each logical chunk of work becomes a session in `plan.md`
+   - Already-completed work gets sessions with `status=merged`
+   - For completed sessions, also create entries in `session.md` with best-effort data
+   - In-progress work gets `status=in_progress`
+   - Future work gets `status=not_started` or `status=ready` based on dependencies
 5. Show the developer the parsed plan for confirmation before writing
 6. Write all files and suggest reviewing with `/haddock:status`
+
+Reference `resources/example-plan.md` and `resources/example-session.md` in the plugin directory for the file format.
 
 ### Step 4: Verify
 

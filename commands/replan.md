@@ -20,9 +20,11 @@ Read the Haddock workflow skill from `skills/haddock-workflow/SKILL.md` in the p
 
 1. Read `.haddock/active` to get the active project name
 2. Read `.haddock/projects/<name>/config.json`
-3. Read `.haddock/projects/<name>/plan.ndjson` — the current plan
-4. Read `.haddock/projects/<name>/sessions.ndjson` — all session outcomes
+3. Read `.haddock/projects/<name>/plan.md` — the current plan
+4. Read `.haddock/projects/<name>/session.md` — all session outcomes
 5. If the config has a `prd_path`, read the PRD as well
+
+Parse plan.md into sessions by scanning for `## S<NNN>` sections and their `<!-- haddock: ... -->` metadata. Parse session.md by scanning for `## S<NNN>` entries and their structured content.
 
 Build a complete picture:
 - Which sessions are complete and what was learned
@@ -38,7 +40,7 @@ Understand what `$ARGUMENTS` is asking for:
 - **Incorporation**: Absorb deferrals/discoveries into the plan
 - **Correction**: Fix incorrect estimates, dependencies, or file lists
 
-If `$ARGUMENTS` is empty, look at pending deferrals and discoveries from sessions.ndjson and ask the developer if those should be incorporated.
+If `$ARGUMENTS` is empty, look at pending deferrals and discoveries from `session.md` and ask the developer if those should be incorporated.
 
 ### Step 3: Check for Existing Replan in Conversation
 
@@ -102,14 +104,14 @@ Present changes as a clear diff:
 ### Step 6: Confirm and Write
 
 1. Ask the developer to confirm the changes
-2. If confirmed, rewrite `.haddock/projects/<name>/plan.ndjson` entirely:
-   - Preserve completed sessions (`merged`) exactly as they are
+2. If confirmed, rewrite `.haddock/projects/<name>/plan.md` entirely:
+   - Preserve completed sessions (`status=merged`) exactly as they are, including their checked checkboxes
    - Preserve `in_progress`/`in_review`/`planning` sessions (only modify if explicitly part of the change)
    - Apply additions, removals, and modifications
    - Reorder all non-merged sessions into dependency-topological order (depended-upon sessions come first). Among sessions at the same DAG depth, place foundation/infrastructure sessions first. Renumber IDs sequentially after the last merged session ID. Update all dependency references and story IDs to reflect the new numbering.
-   - Recalculate all dependency-based statuses
-   - Update `updated_at` timestamps on all modified sessions
-3. Verify the written file — each line must be valid JSON
+   - Recalculate all dependency-based statuses and update `<!-- haddock: ... -->` metadata comments
+   - Update `updated` timestamps on all modified sessions
+3. Verify the written file looks correct (valid markdown, all sessions present)
 
 ### Step 7: Summary
 
@@ -126,7 +128,7 @@ Run /haddock:status to see the updated plan.
 
 ## Important
 
-- Never modify sessions with status `merged` — they represent completed work
+- Never modify sessions with `status=merged` — they represent completed work
 - Be cautious modifying `in_progress` sessions — warn the developer if changes affect active work
 - After applying all changes, renumber ALL non-merged sessions in dependency-topological order, starting from the first non-merged ID. Update all internal references (dependencies, story IDs) to match.
-- Maintain the append-only nature of sessions.ndjson — only plan.ndjson is rewritten
+- Maintain the append-only nature of `session.md` — only `plan.md` is rewritten

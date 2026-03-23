@@ -21,8 +21,9 @@ Read the Haddock workflow skill from `skills/haddock-workflow/SKILL.md` in the p
 ### Default View (no flags)
 
 1. Read `.haddock/active` to get the active project name
-2. Read `.haddock/projects/<name>/plan.ndjson`
-3. Parse all sessions and recalculate statuses based on dependencies
+2. Read `.haddock/projects/<name>/plan.md`
+3. Parse all `## S<NNN> — <title>` sections and their `<!-- haddock: ... -->` metadata
+4. Recalculate dependency-based statuses before displaying
 
 Display sessions grouped by status:
 
@@ -61,10 +62,13 @@ Display sessions grouped by status:
 - Blockers: 0 active
 ```
 
+Count stories by scanning `### Stories` sections: `[x]` checkboxes = done, `[ ]` = not done.
+
 ### Report View (`--report`)
 
-1. Also read `.haddock/projects/<name>/sessions.ndjson` for outcome details
-2. Generate a stakeholder narrative:
+1. Also read `.haddock/projects/<name>/session.md` for outcome details
+2. Parse session entries to find branch names, PR links, discoveries, and deferrals
+3. Generate a stakeholder narrative:
 
 ```
 # Status Report: my-saas-app
@@ -93,7 +97,7 @@ scaffolding (S005) is ready to start independently.
 ### Portfolio View (`--all`)
 
 1. Read `.haddock/projects/` to list all projects
-2. For each project, read its plan.ndjson
+2. For each project, read its `plan.md` and parse session metadata
 3. Display a summary table:
 
 ```
@@ -112,4 +116,5 @@ Active project: my-saas-app
 
 - This is a read-only command — never modify any files
 - Always recalculate dependency-based statuses before displaying
-- If sessions.ndjson has outcomes, use that data to enrich the display (branch names, MR links)
+- Story completion counts come from checkbox state in `plan.md`: `[x]` = done, `[ ]` = not done
+- If `session.md` has outcomes, use that data to enrich the display (branch names, PR links)

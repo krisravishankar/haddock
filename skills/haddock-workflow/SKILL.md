@@ -1,11 +1,11 @@
 ---
 name: haddock-workflow
-description: Core workflow knowledge for Haddock — session lifecycle, NDJSON format, data model, and command relationships
+description: Core workflow knowledge for Haddock — session lifecycle, markdown format, data model, and command relationships
 ---
 
 # Haddock Workflow Skill
 
-You are working with **Haddock**, a living plan manager that tracks implementation progress through session-scoped plans stored as NDJSON.
+You are working with **Haddock**, a living plan manager that tracks implementation progress through session-scoped plans stored as markdown files.
 
 ## Philosophy
 
@@ -21,8 +21,8 @@ All state lives in `.haddock/` in the project working directory (or a designated
 └── projects/
     └── <project-name>/
         ├── config.json                 # Project configuration
-        ├── plan.ndjson                 # One line per session (the plan)
-        └── sessions.ndjson            # One line per completed session (append-only log)
+        ├── plan.md                     # One section per session (the plan)
+        └── session.md                  # Append-only log of completed sessions
 ```
 
 Multiple projects can coexist. The `active` file contains the name of the current project.
@@ -37,13 +37,92 @@ When the working directory is not itself a git repo, `.haddock/` may be stored i
 
 The `.haddock_root` pointer file is created by `/haddock:init` when the user chooses to store `.haddock/` in a child git repo.
 
-## NDJSON Rules
+## Markdown File Format
 
-1. **One JSON object per line** — never pretty-print NDJSON files
-2. **No trailing commas** — each line is a complete, valid JSON object
-3. **plan.ndjson is rewritable** — rewrite the entire file when updating session statuses or replanning
-4. **sessions.ndjson is append-only** — only add new lines, never modify existing entries
-5. **Validate against schema** — read `resources/schema.json` from the plugin directory for field definitions
+### plan.md
+
+`plan.md` is a human- and Copilot-readable markdown file. Each session is a level-2 heading section. Haddock metadata (status, complexity, dependencies) is stored in an HTML comment directly below the heading so it does not clutter the visual layout.
+
+**Structure:**
+
+```markdown
+# Plan: <project-name>
+
+## S001 — <title>
+<!-- haddock: status=<status> complexity=<complexity> dependencies=<none|S001,S002> updated=<ISO8601> -->
+
+**Goal**: <goal>
+
+**Files**: `file1.ts`, `file2.ts`
+
+### Stories
+- [x] **S001-01**: <story title>
+  - [x] <acceptance criterion>
+  - [x] <acceptance criterion>
+- [ ] **S001-02**: <story title>
+  - [ ] <acceptance criterion>
+
+---
+
+## S002 — <title>
+<!-- haddock: status=ready complexity=medium dependencies=S001 updated=2026-03-01T10:00:00Z -->
+...
+```
+
+**Parsing rules for plan.md:**
+- Each session block starts with a `## S<NNN> — <title>` heading
+- The HTML comment `<!-- haddock: ... -->` on the next line holds structured metadata
+- `status` is one of: `not_started`, `blocked`, `ready`, `planning`, `in_progress`, `in_review`, `merged`
+- `dependencies` is comma-separated session IDs, or `none`
+- `**Goal**:` line holds the session goal
+- `**Files**:` line lists files as backtick-quoted, comma-separated paths
+- `### Stories` subsection contains story lines
+- Story lines: `- [x] **S<NNN>-<NN>**: <title>` — `[x]` = done, `[ ]` = not done
+- Acceptance criteria: `  - [x] <text>` (two-space indent under story line)
+- Sessions are separated by `---` horizontal rules
+
+### session.md
+
+`session.md` is an **append-only** log of completed session outcomes. Each entry is a level-2 heading followed by structured content. Never modify existing entries — only append new ones.
+
+**Structure:**
+
+```markdown
+# Session Log: <project-name>
+
+---
+
+## S001 — <title>
+**Completed**: 2026-03-02 14:30 UTC | **Duration**: 75 min | **Branch**: `feat/foundation` | **PR**: [#1](https://github.com/org/repo/pull/1)
+
+<summary paragraph>
+
+**Stories completed**: S001-01, S001-02
+**Stories partial**: (none)
+
+**Discoveries**:
+- Node 20 required for native fetch support — Updates minimum engine requirement (affects: S002)
+
+**Deferrals**:
+- Project table schema needs team review — Architecture decision pending (suggested: S002)
+
+**Tech Debt**:
+- Migration runner lacks rollback on partial failure (severity: medium)
+
+**Blockers**:
+- (none)
+
+---
+```
+
+**Parsing rules for session.md:**
+- Each entry starts with `## S<NNN> — <title>`
+- Metadata line: `**Completed**: <date> | **Duration**: <n> min | **Branch**: <branch> | **PR**: <link>`
+- Summary is the paragraph immediately following the metadata line
+- Sections: `**Stories completed**`, `**Stories partial**`, `**Discoveries**`, `**Deferrals**`, `**Tech Debt**`, `**Blockers**`
+- List items under each section use `- ` prefix
+- Entries are separated by `---` horizontal rules
+- Omit sections that have no content (or write `(none)` as a placeholder)
 
 ## Session Design Principles
 
@@ -77,7 +156,7 @@ When planning sessions — whether through `/haddock:plan`, native plan mode, or
 - Session IDs: `S001`, `S002`, etc.
 - Story IDs: `S001-01`, `S001-02`, etc.
 - Each session needs: id, title, goal, stories, files, dependencies, complexity (low/medium/high)
-- See `resources/schema.json` and `resources/example-plan.ndjson` for the exact schema
+- See `resources/example-plan.md` for the exact format
 
 If you are planning in native plan mode and intend to use `/haddock:plan` afterward to write the plan, structure your output to match these conventions — the command will detect and use your existing session plan.
 
@@ -106,12 +185,12 @@ Not every command needs all data. Load only what's needed:
 |---------|--------------|
 | `init` | Nothing (creates files) |
 | `plan` | config.json, PRD |
-| `replan` | config.json, plan.ndjson, sessions.ndjson, new input |
-| `next` | plan.ndjson |
-| `done` | plan.ndjson, sessions.ndjson (to append) |
-| `status` | plan.ndjson, sessions.ndjson (for `--report`) |
-| `log` | sessions.ndjson |
-| `purge` | plan.ndjson (for summary stats before deletion) |
+| `replan` | config.json, plan.md, session.md, new input |
+| `next` | plan.md |
+| `done` | plan.md, session.md (to append) |
+| `status` | plan.md, session.md (for `--report`) |
+| `log` | session.md |
+| `purge` | plan.md (for summary stats before deletion) |
 | `sync` | N/A (Phase 2) |
 
 ## Command Workflow
@@ -131,19 +210,9 @@ The typical workflow is:
 
 **Plan-mode-first flow:** Developers who prefer to plan in native plan mode (Shift+Tab) can do so before running `/haddock:plan`. The command will detect the session plan from the conversation and offer to use it directly, skipping the exploration phase. This also works with `/haddock:replan` — plan the changes in plan mode first, then run the command to apply them.
 
-## Validation
-
-When writing NDJSON records:
-1. Read `resources/schema.json` from the plugin directory to get field definitions
-2. Ensure all required fields are present
-3. Use ISO 8601 format for all timestamps
-4. Session IDs follow the pattern `S001`, `S002`, etc.
-5. Story IDs follow the pattern `S001-01`, `S001-02`, etc.
-6. Reference `resources/example-plan.ndjson` and `resources/example-sessions.ndjson` for concrete examples
+Copilot CLI's plan mode produces a `plan.md` file whose structure is compatible with haddock's format. When Copilot has already generated a `plan.md`, haddock commands read and manage it directly rather than creating a separate representation.
 
 ## File References
 
-- Schema: `resources/schema.json`
-- Examples: `resources/example-plan.ndjson`, `resources/example-sessions.ndjson`, `resources/example-config.json`
+- Examples: `resources/example-plan.md`, `resources/example-session.md`, `resources/example-config.json`
 - Lifecycle details: `skills/haddock-workflow/references/lifecycle.md`
-- NDJSON format details: `skills/haddock-workflow/references/ndjson-format.md`

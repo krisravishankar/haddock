@@ -21,20 +21,20 @@ Read the Haddock workflow skill from `skills/haddock-workflow/SKILL.md` in the p
 ### Step 1: Load Data
 
 1. Read `.haddock/active` to get the active project name
-2. Read `.haddock/projects/<name>/sessions.ndjson`
-3. Parse each line as a JSON object
-4. If the file is empty, inform the developer that no sessions have been completed yet
+2. Read `.haddock/projects/<name>/session.md`
+3. Parse each `## S<NNN> — <title>` section as a session outcome entry
+4. If the file has no entries beyond the header, inform the developer that no sessions have been completed yet
 
 ### Step 2: Apply Filters
 
-- If `$ARGUMENTS` contains a session ID, filter to entries matching that `session_id`
-- If `--from` is specified, exclude entries with `completed_at` before that date
-- If `--to` is specified, exclude entries with `completed_at` after that date
+- If `$ARGUMENTS` contains a session ID, filter to entries matching that ID
+- If `--from` is specified, exclude entries with a completion date before that date
+- If `--to` is specified, exclude entries with a completion date after that date
 - If no filters, show all entries
 
 ### Step 3: Display Timeline
 
-Show sessions in chronological order:
+Show sessions in chronological order (as they appear in `session.md`):
 
 ```
 # Session Log: my-saas-app
@@ -43,8 +43,8 @@ Show sessions in chronological order:
 **Completed**: 2026-03-02 14:30 UTC
 **Duration**: 75 minutes
 **Branch**: feat/project-foundation
-**MR**: https://github.com/org/repo/pull/1
-**Stories**: 2/2 complete (S001-01, S001-02)
+**PR**: https://github.com/org/repo/pull/1
+**Stories**: ✓ S001-01, S001-02
 
 Set up project scaffolding with TypeScript, configured CI pipeline
 with GitHub Actions. All acceptance criteria met.
@@ -55,8 +55,7 @@ with GitHub Actions. All acceptance criteria met.
 **Completed**: 2026-03-05 09:15 UTC
 **Duration**: 90 minutes
 **Branch**: feat/db-schema
-**MR**: pending
-**Stories**: 1/2 complete (S002-01) | partial: S002-02
+**Stories**: ✓ S002-01 | ◐ S002-02
 
 Completed user table schema and migration. Project table deferred
 due to schema design questions.
@@ -93,4 +92,4 @@ At the bottom, show aggregate stats:
 
 - This is a read-only command — never modify any files
 - If a session has been recorded multiple times (e.g., revisited after deferral), show all entries
-- Display dates in a human-readable format but keep the raw ISO timestamp accessible
+- Display dates in a human-readable format

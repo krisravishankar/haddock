@@ -25,9 +25,10 @@ Read the Haddock workflow skill from `skills/haddock-workflow/SKILL.md` in the p
 
 ### Step 2: Check for In-Progress Work
 
-1. Read the current active project's `plan.ndjson`
-2. Parse all sessions and check for any with status `in_progress` or `planning`
-3. If found, display a non-blocking warning:
+1. Read the current active project's `plan.md`
+2. Parse all `## S<NNN>` sections and their `<!-- haddock: ... -->` metadata
+3. Check for any sessions with `status=in_progress` or `status=planning`
+4. If found, display a non-blocking warning:
 
 ```
 ## Warning: Active Work in Progress
@@ -50,7 +51,7 @@ This work will still be here when you switch back.
 
 **If no argument given:**
 
-1. For each project under `.haddock/projects/`, read its `plan.ndjson` and compute summary stats (total sessions, completed count, in-progress count)
+1. For each project under `.haddock/projects/`, read its `plan.md` and compute summary stats (total sessions, completed count, in-progress count) by parsing `<!-- haddock: status=... -->` metadata
 2. Display a numbered selection table:
 
 ```
@@ -76,8 +77,9 @@ Write the target project name to `.haddock/active`.
 
 Display a brief progress summary of the newly active project:
 
-1. Read the target project's `plan.ndjson`
-2. Show progress with a progress bar and session breakdown:
+1. Read the target project's `plan.md`
+2. Parse all sessions and their metadata
+3. Show progress with a progress bar and session breakdown:
 
 ```
 # Switched to: mobile-app
