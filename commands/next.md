@@ -31,7 +31,32 @@ Recalculate session statuses based on the dependency graph:
 2. If a session has status `not_started` and all deps are `merged` (or no deps), update to `ready`
 3. If a session has status `not_started` and any dep is not `merged`, update to `blocked`
 
-Present sessions grouped by status:
+**If sessions have phases**, present grouped by phase with status shown inline. Include a phase summary line before each group:
+
+```
+## Phase 1: Foundation — ✓ Complete
+
+## Phase 2: Core Features — In Progress
+
+### Ready to Start
+| ID   | Title                    | Complexity | Phase               | Stories |
+|------|--------------------------|------------|---------------------|---------|
+| S003 | Authentication           | high       | 2: Core Features    | 2       |
+
+### In Progress
+| ID   | Title                    | Status      | Phase               |
+|------|--------------------------|-------------|---------------------|
+| S002 | Database schema          | in_progress | 1: Foundation       |
+
+### Blocked
+| ID   | Title                    | Waiting On   | Phase               |
+|------|--------------------------|--------------|---------------------|
+| S004 | API endpoints            | S002, S003   | 2: Core Features    |
+
+## Completed: 1/6 sessions
+```
+
+**If no sessions have phases**, present grouped by status (standard view):
 
 ```
 ## Ready to Start

@@ -110,8 +110,38 @@ Ask the developer:
 - Should any sessions be split or merged?
 - Are the dependencies correct?
 - Any sessions missing?
+- **Would you like to organize sessions into phases?** (e.g., "Phase 1: MVP", "Phase 2: Enhanced Features")
 
-Iterate until the developer confirms the plan.
+#### 5.1: Phase Organization (optional)
+
+If the developer wants phases:
+
+1. Suggest a natural phase grouping based on the dependency graph and feature clusters:
+   - Sessions that form the foundation belong in early phases
+   - Sessions that deliver user-facing value can anchor a phase
+   - Sessions that can only start after most prior sessions complete naturally fall in later phases
+
+2. Present the proposed phase grouping:
+   ```
+   ## Proposed Phases
+
+   **Phase 1: Foundation** — Infrastructure and data layer
+   | ID   | Title                    | Complexity |
+   |------|--------------------------|------------|
+   | S001 | Foundation setup         | low        |
+   | S002 | Database schema          | medium     |
+
+   **Phase 2: Core Features** — Authentication and API
+   | ID   | Title                    | Complexity |
+   |------|--------------------------|------------|
+   | S003 | Authentication           | high       |
+   | S004 | API endpoints            | medium     |
+   ```
+
+3. Ask the developer to confirm or adjust the phase groupings.
+4. Phases are labels only — they don't add dependencies. Sessions still depend only on what they explicitly need. A session in Phase 2 can start as soon as its dependencies are `merged`, even if other Phase 1 sessions are still in progress.
+
+Iterate until the developer confirms the plan (with or without phases).
 
 ### Step 6: Write plan.ndjson
 
@@ -121,7 +151,8 @@ Iterate until the developer confirms the plan.
    - Sessions with no dependencies → `ready`
    - Sessions with dependencies → `not_started`
 4. Set `created_at` and `updated_at` to the current timestamp
-5. Ensure each line is valid JSON (no pretty-printing, no trailing commas)
+5. If phases were defined, include the `phase` field on each session (e.g., `"phase": "1: Foundation"`). Omit the field entirely for sessions without a phase assignment.
+6. Ensure each line is valid JSON (no pretty-printing, no trailing commas)
 
 ### Step 7: Confirm
 

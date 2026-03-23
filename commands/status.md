@@ -23,8 +23,9 @@ Read the Haddock workflow skill from `skills/haddock-workflow/SKILL.md` in the p
 1. Read `.haddock/active` to get the active project name
 2. Read `.haddock/projects/<name>/plan.ndjson`
 3. Parse all sessions and recalculate statuses based on dependencies
+4. Check whether any sessions have a `phase` field set
 
-Display sessions grouped by status:
+**If no sessions have phases**, display sessions grouped by status (standard view):
 
 ```
 # Project: my-saas-app
@@ -60,6 +61,48 @@ Display sessions grouped by status:
 - Discoveries: 2 logged
 - Blockers: 0 active
 ```
+
+**If sessions have phases**, group by phase first, then show status within each phase:
+
+```
+# Project: my-saas-app
+
+## Progress: 2/6 sessions complete (33%)
+████████░░░░░░░░░░░░░░░░ 33%
+
+---
+## Phase 1: Foundation — ✓ Complete (2/2)
+
+| ID   | Title                    | Status  | Stories |
+|------|--------------------------|---------|---------|
+| S001 | Foundation setup         | merged  | 2/2     |
+| S002 | Database schema          | merged  | 3/3     |
+
+---
+## Phase 2: Core Features — In Progress (1/3 done)
+
+| ID   | Title                    | Status      | Stories    | Notes           |
+|------|--------------------------|-------------|------------|-----------------|
+| S003 | Authentication           | in_progress | 1/2 done   | feat/auth       |
+| S004 | API endpoints            | blocked     | —          | waiting: S003   |
+| S005 | Frontend scaffolding     | ready       | 0/3        |                 |
+
+---
+## Phase 3: Polish — Not Started (0/1 done)
+
+| ID   | Title                    | Status      | Waiting On          |
+|------|--------------------------|-------------|---------------------|
+| S006 | Integration tests        | blocked     | S004, S005          |
+
+---
+## Summary
+- Stories: 12/20 complete
+- Deferrals: 1 pending
+- Discoveries: 2 logged
+- Blockers: 0 active
+```
+
+A phase is considered **Complete** when all its sessions are `merged`. A phase is **In Progress** when at least one session is `in_progress`, `planning`, or `in_review`. Sessions with no `phase` field are shown in an "Unphased" section at the end.
 
 ### Report View (`--report`)
 

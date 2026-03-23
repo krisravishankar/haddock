@@ -72,15 +72,15 @@ Analyze the change request against the current plan and codebase:
 
 ### Step 5: Show the Diff
 
-Present changes as a clear diff:
+Present changes as a clear diff. If phases exist, include the phase column:
 
 ```
 ## Plan Changes
 
 ### Added Sessions
-| ID   | Title                    | Complexity | Dependencies |
-|------|--------------------------|------------|--------------|
-| S007 | Redis caching layer      | medium     | S004         |
+| ID   | Title                    | Complexity | Dependencies | Phase            |
+|------|--------------------------|------------|--------------|------------------|
+| S007 | Redis caching layer      | medium     | S004         | 2: Core Features |
 
 ### Modified Sessions
 | ID   | Change                                          |
@@ -97,6 +97,16 @@ Present changes as a clear diff:
 | ID   | From          | To            | Reason                    |
 |------|---------------|---------------|---------------------------|
 | S005 | ready         | blocked       | Now depends on S007       |
+```
+
+If the change request involves reorganizing phases (adding, removing, or renaming phases, or reassigning sessions between phases), show a **Phase Changes** section:
+
+```
+### Phase Changes
+| ID   | Title                    | Phase: From          | Phase: To            |
+|------|--------------------------|----------------------|----------------------|
+| S007 | Redis caching layer      | (new)                | 2: Core Features     |
+| S008 | Monitoring dashboard     | 2: Core Features     | 3: Polish            |
 ```
 
 ### Step 6: Confirm and Write
@@ -129,4 +139,5 @@ Run /haddock:status to see the updated plan.
 - Never modify sessions with status `merged` — they represent completed work
 - Be cautious modifying `in_progress` sessions — warn the developer if changes affect active work
 - After applying all changes, renumber ALL non-merged sessions in dependency-topological order, starting from the first non-merged ID. Update all internal references (dependencies, story IDs) to match.
+- Preserve existing `phase` assignments unless the change request explicitly involves reorganizing phases. When adding new sessions, assign them to a phase if the plan uses phases — ask the developer if it's not obvious.
 - Maintain the append-only nature of sessions.ndjson — only plan.ndjson is rewritten

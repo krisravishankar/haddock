@@ -50,6 +50,7 @@
           "type": "array",
           "items": { "type": "string" }
         },
+        "phase": { "type": "string" },
         "complexity": { "$ref": "#/$defs/complexity" },
         "notes": { "type": "string", "default": "" },
         "created_at": { "type": "string", "format": "date-time" },

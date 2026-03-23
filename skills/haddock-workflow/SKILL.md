@@ -77,7 +77,28 @@ When planning sessions — whether through `/haddock:plan`, native plan mode, or
 - Session IDs: `S001`, `S002`, etc.
 - Story IDs: `S001-01`, `S001-02`, etc.
 - Each session needs: id, title, goal, stories, files, dependencies, complexity (low/medium/high)
+- Sessions may optionally include a `phase` field (see Phases below)
 - See `resources/schema.json` and `resources/example-plan.ndjson` for the exact schema
+
+## Phases (optional)
+
+Phases are optional organizational groupings that developers can use to divide a plan into logical milestones (e.g., "Phase 1: Foundation", "Phase 2: Core Features", "Phase 3: Polish").
+
+**Key properties:**
+- The `phase` field on a session is a plain string (e.g., `"1: Foundation"`, `"2: Core Features"`)
+- Phases are display/grouping metadata only — they do not add implicit dependencies
+- A session in Phase 2 can start as soon as its explicit dependencies are `merged`, regardless of other Phase 1 sessions
+- Sessions without a `phase` field are treated as unphased and shown separately
+
+**When to suggest phases:**
+- Large plans (8+ sessions) where grouping aids comprehension
+- When the developer explicitly asks to phase the plan
+- When natural milestones are apparent from the PRD (e.g., MVP vs. full release)
+
+**Phase display:**
+- `/haddock:status` groups sessions by phase when any session has a `phase` field set
+- `/haddock:next` shows phase context alongside the session list
+- A phase is marked **Complete** when all its sessions are `merged`
 
 If you are planning in native plan mode and intend to use `/haddock:plan` afterward to write the plan, structure your output to match these conventions — the command will detect and use your existing session plan.
 
